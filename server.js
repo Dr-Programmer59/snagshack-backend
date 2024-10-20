@@ -1,5 +1,6 @@
 import {app} from './app.js';
-const cron = require('node-cron');
+// const cron = require('node-cron');
+import cron from "node-cron"
 import user from './models/user.js';
 
 const PORT = process.env.PORT || 8000;
