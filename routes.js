@@ -21,7 +21,12 @@ router.route('/reset-password/:token').put(resetPassword);
 
 router.route("/get-coupan").get(isAuthenticate,sendcoupanEmail);
 
-
+router.route("/check",async (req, res, next) => {
+    res.status(200).json({
+        success: true,
+        
+    })
+})
 
 
 
