@@ -56,8 +56,8 @@ router.route("/create-checkout-session").post(async (req, res,next) => {
               },
             ],
             mode: 'subscription', // Use 'subscription' for recurring payments
-            success_url:  `http://localhost:3000/success?session_id={CHECKOUT_SESSION_ID}`, // URL to redirect to on successful payment
-            cancel_url: 'http://localhost:3000/cancel',  // URL to redirect to on payment failure/cancellation
+            success_url:  `${process.env.FRONTEND_URL}/success?session_id={CHECKOUT_SESSION_ID}`, // URL to redirect to on successful payment
+            cancel_url: `${process.env.FRONTEND_URL}:3000/cancel`,  // URL to redirect to on payment failure/cancellation
           });
           console.log("seesion")
           console.log(session)
