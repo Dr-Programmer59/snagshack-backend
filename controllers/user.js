@@ -9,6 +9,12 @@ import getDataUri from '../utils/dataUri.js';
 import fs from 'fs';
 import path, {dirname} from 'path';
 import {fileURLToPath} from 'url';
+
+import dotenv from 'dotenv';
+dotenv.config({ path: './config/.env' });
+import Stripe from "stripe"
+
+const stripe = Stripe(process.env.STRIPE_KEY);
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
 export const register = catchAsyncError(async (req, res) => {
@@ -149,6 +155,38 @@ export const forgotPassword = catchAsyncError(async (req, res, next) => {
 	sendResponse(true,200,`Reset Token has been sent to ${user.email}`,res);
   });
 
+export const update_subscription=catchAsyncError(async (req, res, next) => {
+   
+		console.log("in it")
+		const { session_id } = req.body;
+		console.log(session_id)
+		
+		try {
+		  const session = await stripe.checkout.sessions.retrieve(session_id);
+		  
+		  if (session.payment_status === 'paid') {
+			console.log("paid")
+			console.log(req.user._id)
+			await UserModel.updateOne(
+				{ _id: req.user._id }, 
+				{ $set: { 
+					subscription_plan: 'basic',
+				 payment_id: session_id
+				} }
+			);
+			res.status(200).json({sucess:true, message: 'Payment successful', session });
+			
+		  } else {
+			// Payment failed or still processing
+			res.status(400).json({ message: 'Payment not completed' });
+		  }
+		} catch (error) {
+		  res.status(500).json({sucess:false, error: error.message });
+		}
+	  
+	
+ 
+})
 // reset password 
 export const resetPassword = catchAsyncError(async (req, res, next) => {
     const { token } = req.params;
@@ -175,3 +213,4 @@ export const resetPassword = catchAsyncError(async (req, res, next) => {
     await user.save();
 	sendResponse(true,200,"Password Changed Successfully",res);
   });
+

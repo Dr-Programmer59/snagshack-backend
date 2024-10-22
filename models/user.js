@@ -25,7 +25,10 @@ const schema = new mongoose.Schema({
 	resetPasswordExpire: {type: String, default: undefined},
 	avatar: {type: String,default: undefined,get: getAvatar},
 	username: {type: String,default: undefined,unique: false},
-	limit:{type:Number,default:0}
+	limit:{type:Number,default:0},
+	subscription_plan:{type:String,default:null},
+	payment_id:{type:String,default:null}
+	
 	
 },{timestamps: true});
 

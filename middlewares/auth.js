@@ -4,6 +4,7 @@ import UserModel from '../models/user.js';
 
 export const isAuthenticate = async (req,res,next) => {
     try{
+        // console.log("working")
         const token = req.cookies.token;
 
         if(!token) throw new ErrorHandler('Unauthorize user',401);
