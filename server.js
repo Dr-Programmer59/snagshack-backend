@@ -11,7 +11,7 @@ const resetDatabase = async() => {
         console.log('Resetting user limits at 12:00 PM...');
         
         // Update all users and set the `limit` field to 0
-        const result = await user.updateMany({}, { $set: { limit: 0 } });
+        // const result = await user.updateMany({}, { $set: { limit: 0 } });
         
         console.log(`Successfully reset limits for ${result.nModified} users.`);
     } catch (error) {
@@ -20,8 +20,7 @@ const resetDatabase = async() => {
 };
 
 // Schedule the reset task to run every day at 12:00 PM
-cron.schedule('0 12 * * *', () => {
+cron.schedule('0 0 * * *', () => {
     resetDatabase();
 });
-
 app.listen(PORT, () => console.log('server running on port 4000'));
