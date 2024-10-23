@@ -9,6 +9,7 @@ import Stripe from "stripe"
 
 const stripe = Stripe(process.env.STRIPE_KEY);
 import { sendcoupanEmail } from './controllers/coupans.js';
+import { chatgptprompt } from './controllers/chatgpt.js';
 const router = express.Router();
 
 // users routes
@@ -25,6 +26,11 @@ router.route('/reset-password/:token').put(resetPassword);
 // coupans apis
 
 router.route("/get-coupan").get(isAuthenticate,sendcoupanEmail);
+
+router.route("/gpt-result").post(chatgptprompt);
+
+
+
 
 router.route("/verify-").post(async (req, res, next) => {
   const {session_id}=req.body;
