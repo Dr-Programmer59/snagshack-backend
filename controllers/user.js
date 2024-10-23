@@ -104,16 +104,17 @@ export const logout = catchAsyncError(async (req, res, next) => {
 });
 
 export const updateUser = catchAsyncError(async (req, res, next) => {
-	const {name, email,channelName,file} = req.body;
+	const {name, email,file} = req.body;
 	
 	if(req.file){
 		const base64 = getDataUri(req.file);
 		const filename = `${new Date(Date.now()).getTime()}-${req.file.originalname}${base64.fileName}`
 	    fs.writeFileSync(path.join(__dirname,`../public/upload/images/${filename}`),base64.buffer,'binary');
 		const avatar = `/upload/images/${filename}`;
-		const user = await UserModel.findByIdAndUpdate(req.user._id,{channelName,name,email,avatar});
+		console.log(avatar)
+		const user = await UserModel.findByIdAndUpdate(req.user._id,{name,email,avatar});
 	}
-	const user = await UserModel.findByIdAndUpdate(req.user._id,{channelName,name,email});
+	const user = await UserModel.findByIdAndUpdate(req.user._id,{name,email});
 	
 	sendResponse(true,200,'Update successfully',res);
 });
