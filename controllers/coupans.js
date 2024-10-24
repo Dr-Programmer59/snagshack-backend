@@ -16,8 +16,8 @@ import user from "../models/user.js";
 export const sendcoupanEmail = catchAsyncError(async (req, res, next) => {
 	
 	if(req.user.limit<2){
-		const unusedCoupan = await coupans.findOne({ used: false });
-    await coupans.updateOne({"_id":unusedCoupan._id},{ $set: { used: true }})
+		const unusedCoupan = await coupans.findOne({ used: false, coupanActivated: true });
+		await coupans.updateOne({"_id":unusedCoupan._id},{ $set: { used: true }})
 		await user.updateOne({"_id":req.user._id},{ $inc: { limit: 1 } } )
 		res.status(200).json({
 			success: true,
