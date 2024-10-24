@@ -6,7 +6,7 @@ import {changePassword, loadme, login, logout, register, updateUser,forgotPasswo
 import { isAuthenticate, isCheckRole } from './middlewares/auth.js';
 import singleUpload from './middlewares/multer.js';
 import Stripe from "stripe"
-
+console.log(process.env.STRIPE_KEY)
 const stripe = Stripe(process.env.STRIPE_KEY);
 import { sendcoupanEmail } from './controllers/coupans.js';
 import { chatgptprompt } from './controllers/chatgpt.js';
@@ -49,6 +49,7 @@ router.route("/verify-").post(async (req, res, next) => {
 router.route("/update-subscription").post(isAuthenticate,update_subscription)
 router.route("/create-checkout-session").post(async (req, res,next) => {
         console.log("somethign")
+        const { promo_code } = req.body;
         const  productId  = process.env.PRODUCTID;
         console.log(productId)
         try {
@@ -61,9 +62,11 @@ router.route("/create-checkout-session").post(async (req, res,next) => {
                 quantity: 1,
               },
             ],
+            allow_promotion_codes: true,  
             mode: 'subscription', // Use 'subscription' for recurring payments
             success_url:  `${process.env.FRONTEND_URL}/success?session_id={CHECKOUT_SESSION_ID}`, // URL to redirect to on successful payment
-            cancel_url: `${process.env.FRONTEND_URL}:3000/cancel`,  // URL to redirect to on payment failure/cancellation
+            cancel_url: `${process.env.FRONTEND_URL}/cancel`, 
+           // URL to redirect to on payment failure/cancellation
           });
           console.log("seesion")
           console.log(session)
