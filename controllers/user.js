@@ -157,14 +157,15 @@ export const forgotPassword = catchAsyncError(async (req, res, next) => {
   });
 
 export const update_subscription=catchAsyncError(async (req, res, next) => {
-   
+		const currentDate = new Date();
 		console.log("in it")
 		const { session_id } = req.body;
 		console.log(session_id)
 		
 		try {
 		  const session = await stripe.checkout.sessions.retrieve(session_id);
-		  
+		  const expirationDate = new Date(currentDate.setDate(currentDate.getDate() + 30)); // Add 30 days
+
 		  if (session.payment_status === 'paid') {
 			console.log("paid")
 			console.log(req.user._id)
@@ -172,7 +173,8 @@ export const update_subscription=catchAsyncError(async (req, res, next) => {
 				{ _id: req.user._id }, 
 				{ $set: { 
 					subscription_plan: 'basic',
-				 payment_id: session_id
+				 payment_id: session_id,
+				 payment_time:expirationDate
 				} }
 			);
 			res.status(200).json({sucess:true, message: 'Payment successful', session });
@@ -182,6 +184,7 @@ export const update_subscription=catchAsyncError(async (req, res, next) => {
 			res.status(400).json({ message: 'Payment not completed' });
 		  }
 		} catch (error) {
+			console.log(error)
 		  res.status(500).json({sucess:false, error: error.message });
 		}
 	  

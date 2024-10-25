@@ -27,7 +27,8 @@ const schema = new mongoose.Schema({
 	username: {type: String,default: undefined,unique: false},
 	limit:{type:Number,default:0},
 	subscription_plan:{type:String,default:null},
-	payment_id:{type:String,default:null}
+	payment_id:{type:String,default:null},
+	payment_time:{type:Date,default:null}
 	
 	
 },{timestamps: true});

@@ -200,10 +200,10 @@ With these changes, the chatbot should feel less like a Q&A machine and more lik
 
 `
           },
-          ...messages.map(msg => ({
-            role: msg.role === 'user' ? 'user' : 'assistant',
-            content: msg.msg
-          })),
+          // ...messages.map(msg => ({
+          //   role: msg.role === 'user' ? 'user' : 'assistant',
+          //   content: msg.msg
+          // })),
           {
             role: 'user',
             content: question
@@ -221,7 +221,8 @@ With these changes, the chatbot should feel less like a Q&A machine and more lik
         res: response.data
     })
 }
-    catch{
+    catch(err){
+      console.log(err)
         res.status(200).json({
             success: false,
         
