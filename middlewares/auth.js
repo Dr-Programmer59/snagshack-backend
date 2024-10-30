@@ -30,9 +30,13 @@ export const isAuthenticate = async (req,res,next) => {
 
 export const isCheckRole = (role) => async (req,res,next) => {
     try{
-        if(req.user.role != role){
+        console.log(req.user.role)
+        console.log(role)
+        if(req.user.role.trim() != role.trim()){
             throw new ErrorHandler(`Only ${role} can do this opretion`,401);
         }
+        console.log("in this")
+
 
         next()
        

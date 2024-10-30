@@ -11,7 +11,7 @@ const resetDatabase = async() => {
         console.log('Resetting user limits at 12:00 PM...');
         
         // Update all users and set the `limit` field to 0
-        const result = await user.updateMany({}, { $set: { limit: 0 } });
+        const result = await user.updateMany({}, { $set: { limit: 2 } });
         
         console.log(`Successfully reset limits for ${result.nModified} users.`);
     } catch (error) {

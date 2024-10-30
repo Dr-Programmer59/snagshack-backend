@@ -28,7 +28,8 @@ const schema = new mongoose.Schema({
 	limit:{type:Number,default:0},
 	subscription_plan:{type:String,default:null},
 	payment_id:{type:String,default:null},
-	payment_time:{type:Date,default:null}
+	payment_time:{type:Date,default:null},
+	role:{type:String,default:"user"}
 	
 	
 },{timestamps: true});
@@ -46,6 +47,7 @@ schema.pre("save", async function (next) {
   };
   
   schema.methods.comparePassword = async function (password) {
+	console.log("this pasword is ",password)
 	return await bcrypt.compare(password, this.password);
   };
 

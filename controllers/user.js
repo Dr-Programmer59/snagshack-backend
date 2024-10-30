@@ -13,12 +13,13 @@ import {fileURLToPath} from 'url';
 import dotenv from 'dotenv';
 dotenv.config({ path: './config/.env' });
 import Stripe from "stripe"
+import { User } from 'lucide-react';
 
 const stripe = Stripe(process.env.STRIPE_KEY);
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
 export const register = catchAsyncError(async (req, res) => {
-	const {name, email, password} = req.body;
+	const {name, email, password,role} = req.body;
 	console.log('body',req.body);
 	const isExist = await UserModel.findOne({email});
 	if(isExist) return sendResponse(false, 401, 'Email already exist',res);
@@ -68,6 +69,14 @@ export const login = catchAsyncError(async (req, res, next) => {
 
 });
 
+export const getallUsers=catchAsyncError(async(req,res,next)=>{
+	
+	const user =await UserModel.find();
+	res.status(200).json({
+		success: true,
+		users: user
+	})
+})
 
 export const checkOTP = catchAsyncError(async (req, res, next) => {
 	console.log('login')
@@ -103,6 +112,16 @@ export const logout = catchAsyncError(async (req, res, next) => {
 	})
 });
 
+export const increaseLimit=async(req,res,next)=>{
+	
+	let {incLimit,userId}=req.body
+	console.log("ub crease kunut")
+	incLimit=Number(incLimit)
+	await UserModel.updateOne({"_id":userId},{ $inc: { limit: incLimit} }  )
+	res.status(200).json({sucess:true });
+
+
+}
 export const updateUser = catchAsyncError(async (req, res, next) => {
 	const {name, email,file} = req.body;
 	
@@ -194,7 +213,7 @@ export const update_subscription=catchAsyncError(async (req, res, next) => {
 // reset password 
 export const resetPassword = catchAsyncError(async (req, res, next) => {
     const { token } = req.params;
-  
+  console.log(token)
     const resetPasswordToken = crypto
       .createHash("sha256")
       .update(token)
@@ -209,7 +228,7 @@ export const resetPassword = catchAsyncError(async (req, res, next) => {
   
     if (!user)
       return next(new ErrorHandler("Token is invalid or has been expired", 401));
-  
+	console.log(req.body)
     user.password = req.body.password;
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;

@@ -2,7 +2,7 @@
 import dotenv from 'dotenv';
 dotenv.config({ path: './config/.env' });
 import express from 'express';
-import {changePassword, loadme, login, logout, register, updateUser,forgotPassword,resetPassword, checkOTP, update_subscription} from './controllers/user.js';
+import {changePassword, loadme, login, logout, register, updateUser,forgotPassword,resetPassword, checkOTP, update_subscription, getallUsers, increaseLimit} from './controllers/user.js';
 import { isAuthenticate, isCheckRole } from './middlewares/auth.js';
 import singleUpload from './middlewares/multer.js';
 import Stripe from "stripe"
@@ -21,8 +21,8 @@ router.route('/user/update').put(isAuthenticate,singleUpload,updateUser);
 router.route('/user/change-password').put(isAuthenticate,changePassword);
 router.route('/forgot-password').post(forgotPassword);
 router.route('/reset-password/:token').put(resetPassword);
-
-
+router.route("/increase-limit").post(isAuthenticate,isCheckRole("admin"),increaseLimit)
+router.route("/users").get(isAuthenticate,isCheckRole("admin"),getallUsers)
 // coupans apis
 
 router.route("/get-coupan").get(isAuthenticate,sendcoupanEmail);
