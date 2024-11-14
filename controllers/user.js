@@ -170,7 +170,7 @@ export const forgotPassword = catchAsyncError(async (req, res, next) => {
 
     const message = `Click on the link to reset your password. ${url}. If you have not request then please ignore.`;
     // Send token via email
-    await sendEmail(user.email, "HG Streaming Reset Password", message);
+    await sendEmail(user.email, "SnagShack Reset Password", message);
 	console.log(url);
 	sendResponse(true,200,`Reset Token has been sent to ${user.email}`,res);
   });
